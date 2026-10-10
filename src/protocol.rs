@@ -154,6 +154,10 @@ impl RobotSerial {
         let cmd_str = cmd.to_string();
         self.port.write_all(cmd_str.as_bytes())?;
         self.port.write_all(b"\n")?;
+        self.port.flush()?;
+
+        // Small delay to let Arduino process
+        std::thread::sleep(std::time::Duration::from_millis(50));
 
         let mut reader = BufReader::new(&mut self.port);
         let mut line = String::new();
